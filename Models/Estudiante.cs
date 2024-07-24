@@ -11,6 +11,6 @@ namespace dashboard.Models
         public string? Telefono { get; set; }
 
         [JsonIgnore]
-        public virtual List<Inscripcion> Inscripciones { get; set; } = new List<Inscripcion>();
+        public List<Inscripcion> Inscripciones { get; set; } = new List<Inscripcion>();
     }
 }

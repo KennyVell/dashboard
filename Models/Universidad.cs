@@ -9,6 +9,6 @@ namespace dashboard.Models
         public string? Decano { get; set; }
 
         [JsonIgnore]
-        public virtual List<Carrera> Carreras { get; set; } = new List<Carrera>();
+        public List<Carrera> Carreras { get; set; } = new List<Carrera>();
     }
 }

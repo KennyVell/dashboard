@@ -2,8 +2,8 @@ namespace dashboard.DTOs
 {
     public class InscripcionDTO
     {
-        public int Id_estudiante { get; set; }
-        public int Id_materia { get; set; }
+        public int EstudianteId { get; set; }
+        public int MateriaId { get; set; }
         public string? Estado { get; set; }   
     }
 }

@@ -8,13 +8,13 @@ namespace dashboard.Models
         public string? Nombre { get; set; }
         public string? Semestre { get; set; }
         public int Año { get; set; }
-        public int Id_carrera { get; set; }
-        public int Id_profesor { get; set; }
+        public int CateriaId { get; set; }
+        public int ProfesorId { get; set; }
 
-        public virtual Carrera? Carrera { get; set; }
-        public virtual Profesor? Profesor { get; set; }
+        public Carrera? Carrera { get; set; }
+        public Profesor? Profesor { get; set; }
 
         [JsonIgnore]
-        public virtual List<Inscripcion> Inscripciones { get; set; } = new List<Inscripcion>();
+        public List<Inscripcion> Inscripciones { get; set; } = new List<Inscripcion>();
     }
 }
