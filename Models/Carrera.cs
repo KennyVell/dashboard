@@ -7,5 +7,6 @@ namespace dashboard.Models
         public string? Nombre { get; set; }
 
         public virtual Universidad? Universidad { get; set; }
+        public virtual List<Materia> Materias { get; set; } = new List<Materia>();
     }
 }

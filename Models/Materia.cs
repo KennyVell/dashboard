@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace dashboard.Models
 {
     public class Materia
@@ -11,5 +13,8 @@ namespace dashboard.Models
 
         public virtual Carrera? Carrera { get; set; }
         public virtual Profesor? Profesor { get; set; }
+
+        [JsonIgnore]
+        public virtual List<Inscripcion> Inscripciones { get; set; } = new List<Inscripcion>();
     }
 }
