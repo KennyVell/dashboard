@@ -5,7 +5,7 @@ namespace dashboard.Interfaces
 {
     public interface IUniversidadesService
     {
-        Task Add(Universidad universidad);
+        Task Add(UniversidadDTO universidad);
         Task<IEnumerable<Universidad>> GetAll();
         Task<Universidad> GetById(int id);
         Task Update(int id, UniversidadDTO universidad);

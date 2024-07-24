@@ -17,7 +17,7 @@ namespace dashboard.Services
             _mapper = mapper;
         }
 
-        public async Task Add(Materia Materia)
+        public async Task Add(MateriaDTO Materia)
         {
             var nuevoMateria = _mapper.Map<Materia>(Materia);
             await _context.Materias.AddAsync(nuevoMateria);

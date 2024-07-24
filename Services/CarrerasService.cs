@@ -17,7 +17,7 @@ namespace dashboard.Services
             _mapper = mapper;
         }
 
-        public async Task Add(Carrera carrera)
+        public async Task Add(CarreraDTO carrera)
         {
             var nuevoCarrera = _mapper.Map<Carrera>(carrera);
             await _context.Carreras.AddAsync(nuevoCarrera);

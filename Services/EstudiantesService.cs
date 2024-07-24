@@ -17,7 +17,7 @@ namespace dashboard.Services
             _mapper = mapper;
         }
 
-        public async Task Add(Estudiante estudiante)
+        public async Task Add(EstudianteDTO estudiante)
         {
             if (await _context.Estudiantes.AnyAsync(e => e.Correo == estudiante.Correo))
             {

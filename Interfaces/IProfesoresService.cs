@@ -5,7 +5,7 @@ namespace dashboard.Interfaces
 {
     public interface IProfesoresService
     {
-        Task Add(Profesor profesor);
+        Task Add(ProfesorDTO profesor);
         Task<IEnumerable<Profesor>> GetAll();
         Task<Profesor> GetById(int id);
         Task Update(int id, ProfesorDTO profesor);

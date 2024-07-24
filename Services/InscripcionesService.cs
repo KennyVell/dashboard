@@ -17,7 +17,7 @@ namespace dashboard.Services
             _mapper = mapper;
         }
 
-        public async Task Add(Inscripcion inscripcion)
+        public async Task Add(InscripcionDTO inscripcion)
         {
             var nuevoInscripcion = _mapper.Map<Inscripcion>(inscripcion);
             await _context.Inscripciones.AddAsync(nuevoInscripcion);

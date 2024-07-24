@@ -17,7 +17,7 @@ namespace dashboard.Services
             _mapper = mapper;
         }
 
-        public async Task Add(Profesor profesor)
+        public async Task Add(ProfesorDTO profesor)
         {
             if (await _context.Profesores.AnyAsync(e => e.Correo == profesor.Correo))
             {
