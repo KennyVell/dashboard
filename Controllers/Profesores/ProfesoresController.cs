@@ -1,32 +1,47 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using dashboard.Interfaces;
 
 namespace dashboard.Controllers.Profesores
 {
-    [Route("[controller]")]
     public class ProfesoresController : Controller
     {
-        private readonly ILogger<ProfesoresController> _logger;
+        private readonly IProfesoresService _profesoresService;
 
-        public ProfesoresController(ILogger<ProfesoresController> logger)
+        public ProfesoresController(IProfesoresService profesoresService)
         {
-            _logger = logger;
+            _profesoresService = profesoresService;
         }
 
-        public IActionResult Index()
+        [HttpGet]
+        public async Task<IActionResult> Index()
         {
-            return View();
+            try
+            {
+                var profesores = await _profesoresService.GetAll();
+                if (profesores.Any()) return View(profesores);
+                return View(profesores);
+            }
+            catch (Exception ex)
+            {                
+                Console.WriteLine(ex.Message);
+                throw new Exception(ex.Message);                
+            }
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        [HttpGet]
+        public async Task<IActionResult> Details(int id)
         {
-            return View("Error!");
+            try
+            {
+                var profesor = await _profesoresService.GetById(id);
+                if (profesor!= null) return View(profesor);
+                return NotFound();
+            }
+            catch (Exception ex)
+            {                
+                Console.WriteLine(ex.Message);
+                throw new Exception(ex.Message);                
+            }
         }
     }
 }

@@ -1,32 +1,47 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using dashboard.Interfaces;
 
 namespace dashboard.Controllers.Carreras
 {
-    [Route("[controller]")]
     public class CarrerasController : Controller
     {
-        private readonly ILogger<CarrerasController> _logger;
+        private readonly ICarrerasService _carrerasService;
 
-        public CarrerasController(ILogger<CarrerasController> logger)
+        public CarrerasController(ICarrerasService carrerasService)
         {
-            _logger = logger;
+            _carrerasService = carrerasService;
         }
 
-        public IActionResult Index()
+        [HttpGet]
+        public async Task<IActionResult> Index()
         {
-            return View();
+            try
+            {
+                var carreras = await _carrerasService.GetAll();
+                if (carreras.Any()) return View(carreras);
+                return View(carreras);
+            }
+            catch (Exception ex)
+            {                
+                Console.WriteLine(ex.Message);
+                throw new Exception(ex.Message);                
+            }
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        [HttpGet]
+        public async Task<IActionResult> Details(int id)
         {
-            return View("Error!");
+            try
+            {
+                var carrera = await _carrerasService.GetById(id);
+                if (carrera!= null) return View(carrera);
+                return NotFound();
+            }
+            catch (Exception ex)
+            {                
+                Console.WriteLine(ex.Message);
+                throw new Exception(ex.Message);                
+            }
         }
     }
 }

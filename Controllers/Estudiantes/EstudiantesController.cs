@@ -1,32 +1,47 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using dashboard.Interfaces;
 
 namespace dashboard.Controllers.Estudiantes
 {
-    [Route("[controller]")]
     public class EstudiantesController : Controller
     {
-        private readonly ILogger<EstudiantesController> _logger;
+        private readonly IEstudiantesService _estudiantesService;
 
-        public EstudiantesController(ILogger<EstudiantesController> logger)
+        public EstudiantesController(IEstudiantesService estudiantesService)
         {
-            _logger = logger;
+            _estudiantesService = estudiantesService;
         }
 
-        public IActionResult Index()
+        [HttpGet]
+        public async Task<IActionResult> Index()
         {
-            return View();
+            try
+            {
+                var estudiantes = await _estudiantesService.GetAll();
+                if (estudiantes.Any()) return View(estudiantes);
+                return View(estudiantes);
+            }
+            catch (Exception ex)
+            {                
+                Console.WriteLine(ex.Message);
+                throw new Exception(ex.Message);                
+            }
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        [HttpGet]
+        public async Task<IActionResult> Details(int id)
         {
-            return View("Error!");
+            try
+            {
+                var estudiante = await _estudiantesService.GetById(id);
+                if (estudiante!= null) return View(estudiante);
+                return NotFound();
+            }
+            catch (Exception ex)
+            {                
+                Console.WriteLine(ex.Message);
+                throw new Exception(ex.Message);                
+            }
         }
     }
 }

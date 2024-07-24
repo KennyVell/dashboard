@@ -1,32 +1,47 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using dashboard.Interfaces;
 
 namespace dashboard.Controllers.Inscripciones
 {
-    [Route("[controller]")]
     public class InscripcionesController : Controller
     {
-        private readonly ILogger<InscripcionesController> _logger;
+        private readonly IInscripcionesService _inscripcionesService;
 
-        public InscripcionesController(ILogger<InscripcionesController> logger)
+        public InscripcionesController(IInscripcionesService inscripcionesService)
         {
-            _logger = logger;
+            _inscripcionesService = inscripcionesService;
         }
 
-        public IActionResult Index()
+        [HttpGet]
+        public async Task<IActionResult> Index()
         {
-            return View();
+            try
+            {
+                var inscripciones = await _inscripcionesService.GetAll();
+                if (inscripciones.Any()) return View(inscripciones);
+                return View(inscripciones);
+            }
+            catch (Exception ex)
+            {                
+                Console.WriteLine(ex.Message);
+                throw new Exception(ex.Message);                
+            }
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        [HttpGet]
+        public async Task<IActionResult> Details(int id)
         {
-            return View("Error!");
+            try
+            {
+                var inscripcion = await _inscripcionesService.GetById(id);
+                if (inscripcion!= null) return View(inscripcion);
+                return NotFound();
+            }
+            catch (Exception ex)
+            {                
+                Console.WriteLine(ex.Message);
+                throw new Exception(ex.Message);                
+            }
         }
     }
 }

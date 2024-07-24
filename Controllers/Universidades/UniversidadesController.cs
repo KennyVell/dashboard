@@ -1,32 +1,47 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using dashboard.Interfaces;
 
 namespace dashboard.Controllers.Universidades
 {
-    [Route("[controller]")]
     public class UniversidadesController : Controller
     {
-        private readonly ILogger<UniversidadesController> _logger;
+        private readonly IUniversidadesService _universidadesService;
 
-        public UniversidadesController(ILogger<UniversidadesController> logger)
+        public UniversidadesController(IUniversidadesService universidadesService)
         {
-            _logger = logger;
+            _universidadesService = universidadesService;
         }
 
-        public IActionResult Index()
+        [HttpGet]
+        public async Task<IActionResult> Index()
         {
-            return View();
+            try
+            {
+                var universidades = await _universidadesService.GetAll();
+                if (universidades.Any()) return View(universidades);
+                return View(universidades);
+            }
+            catch (Exception ex)
+            {                
+                Console.WriteLine(ex.Message);
+                throw new Exception(ex.Message);                
+            }
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        [HttpGet]
+        public async Task<IActionResult> Details(int id)
         {
-            return View("Error!");
+            try
+            {
+                var universidad = await _universidadesService.GetById(id);
+                if (universidad!= null) return View(universidad);
+                return NotFound();
+            }
+            catch (Exception ex)
+            {                
+                Console.WriteLine(ex.Message);
+                throw new Exception(ex.Message);                
+            }
         }
     }
 }

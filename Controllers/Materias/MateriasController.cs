@@ -1,32 +1,47 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using dashboard.Interfaces;
 
 namespace dashboard.Controllers.Materias
 {
-    [Route("[controller]")]
     public class MateriasController : Controller
     {
-        private readonly ILogger<MateriasController> _logger;
+        private readonly IMateriasService _materiasService;
 
-        public MateriasController(ILogger<MateriasController> logger)
+        public MateriasController(IMateriasService materiasService)
         {
-            _logger = logger;
+            _materiasService = materiasService;
         }
 
-        public IActionResult Index()
+        [HttpGet]
+        public async Task<IActionResult> Index()
         {
-            return View();
+            try
+            {
+                var materias = await _materiasService.GetAll();
+                if (materias.Any()) return View(materias);
+                return View(materias);
+            }
+            catch (Exception ex)
+            {                
+                Console.WriteLine(ex.Message);
+                throw new Exception(ex.Message);                
+            }
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        [HttpGet]
+        public async Task<IActionResult> Details(int id)
         {
-            return View("Error!");
+            try
+            {
+                var materia = await _materiasService.GetById(id);
+                if (materia!= null) return View(materia);
+                return NotFound();
+            }
+            catch (Exception ex)
+            {                
+                Console.WriteLine(ex.Message);
+                throw new Exception(ex.Message);                
+            }
         }
     }
 }
