@@ -26,57 +26,57 @@ namespace dashboard.Services
             using (var package = new ExcelPackage(new FileInfo(filePath)))
             {
                 var sheet = package.Workbook.Worksheets[0];
-                int colCount = sheet.Dimension.Rows;
+                int rowCount = sheet.Dimension.Rows;
 
-                for (int col = 2; col <= colCount; col++)
+                for (int row = 2; row <= rowCount; row++)
                 {
                     var estudiante = new Estudiante
                     {
-                        Nombre = sheet.Cells[col, 2].Value.ToString(),
-                        Apellido = sheet.Cells[col, 3].Value.ToString(),
-                        Correo = sheet.Cells[col, 4].Value.ToString(),
-                        Telefono = sheet.Cells[col, 5].Value.ToString()
+                        Nombre = sheet.Cells[row, 2].Value.ToString(),
+                        Apellido = sheet.Cells[row, 3].Value.ToString(),
+                        Correo = sheet.Cells[row, 4].Value.ToString(),
+                        Telefono = sheet.Cells[row, 5].Value.ToString()
                     };
                     estudiantes.Add(estudiante);
 
                     var profesor = new Profesor
                     {
-                        Nombre = sheet.Cells[col, 9].Value.ToString(),
-                        Apellido = sheet.Cells[col, 10].Value.ToString(),
-                        Correo = sheet.Cells[col, 11].Value.ToString(),
-                        Telefono = sheet.Cells[col, 12].Value.ToString()
+                        Nombre = sheet.Cells[row, 9].Value.ToString(),
+                        Apellido = sheet.Cells[row, 10].Value.ToString(),
+                        Correo = sheet.Cells[row, 11].Value.ToString(),
+                        Telefono = sheet.Cells[row, 12].Value.ToString()
                     };
                     profesores.Add(profesor);
 
                     var universidad = new Universidad
                     {
-                        Nombre = sheet.Cells[col, 15].Value.ToString(),
-                        Decano = sheet.Cells[col, 13].Value.ToString()
+                        Nombre = sheet.Cells[row, 15].Value.ToString(),
+                        Decano = sheet.Cells[row, 13].Value.ToString()
                     };
                     universidades.Add(universidad);
 
                     var carrera = new Carrera
                     {
-                        Nombre = sheet.Cells[col, 14].Value.ToString(),
-                        Id_universidad = (int)sheet.Cells[col, 1].Value
+                        Nombre = sheet.Cells[row, 14].Value.ToString(),
+                        Id_universidad = int.Parse(sheet.Cells[row, 1].Value.ToString()!)
                     };
                     carreras.Add(carrera);
 
                     var materia = new Materia
                     {
-                        Nombre = sheet.Cells[col, 6].Value.ToString(),
-                        Semestre = sheet.Cells[col, 7].Value.ToString(),
-                        Año = (int)sheet.Cells[col, 8].Value,
-                        Id_carrera = (int)sheet.Cells[col, 1].Value,
-                        Id_profesor = (int)sheet.Cells[col, 1].Value
+                        Nombre = sheet.Cells[row, 6].Value.ToString(),
+                        Semestre = sheet.Cells[row, 7].Value.ToString(),
+                        Año = int.Parse(sheet.Cells[row, 8].Value.ToString()!),
+                        Id_carrera = int.Parse(sheet.Cells[row, 1].Value.ToString()!),
+                        Id_profesor = int.Parse(sheet.Cells[row, 1].Value.ToString()!)
                     };
                     materias.Add(materia);
 
                     var inscripcion = new Inscripcion
                     {
-                        Estado = sheet.Cells[col, 16].Value.ToString(),
-                        Id_materia = (int)sheet.Cells[col, 1].Value,
-                        Id_estudiante = (int)sheet.Cells[col, 1].Value
+                        Estado = sheet.Cells[row, 16].Value.ToString(),
+                        Id_materia = int.Parse(sheet.Cells[row, 1].Value.ToString()!),
+                        Id_estudiante = int.Parse(sheet.Cells[row, 1].Value.ToString()!)
                     };
                     inscripciones.Add(inscripcion);
                 }

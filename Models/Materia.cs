@@ -4,7 +4,7 @@ namespace dashboard.Models
 {
     public class Materia
     {
-        public int Id_materia { get; set; }
+        public int Id { get; set; }
         public string? Nombre { get; set; }
         public string? Semestre { get; set; }
         public int Año { get; set; }
