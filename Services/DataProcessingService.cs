@@ -33,21 +33,18 @@ namespace dashboard.Services
                 {
                     int id = int.Parse(sheet.Cells[row, 1].Value.ToString()!);
 
-                    if (row < estudiantes.Count)
+                    // Verificar y agregar estudiante si el correo no existe
+                    string correoEstudiante = sheet.Cells[row, 4].Value.ToString()!;
+                    if (!estudiantes.Any(e => e.Correo == correoEstudiante))
                     {
-                        // Verificar y agregar estudiante si el correo no existe
-                        string correoEstudiante = sheet.Cells[row, 4].Value.ToString()!;
-                        if (!estudiantes.Any(e => e.Correo == correoEstudiante))
+                        var estudiante = new Estudiante
                         {
-                            var estudiante = new Estudiante
-                            {
-                                Nombre = sheet.Cells[row, 2].Value.ToString(),
-                                Apellido = sheet.Cells[row, 3].Value.ToString(),
-                                Correo = correoEstudiante,
-                                Telefono = sheet.Cells[row, 5].Value.ToString()
-                            };
-                            estudiantes.Add(estudiante);
-                        }
+                            Nombre = sheet.Cells[row, 2].Value.ToString(),
+                            Apellido = sheet.Cells[row, 3].Value.ToString(),
+                            Correo = correoEstudiante,
+                            Telefono = sheet.Cells[row, 5].Value.ToString()
+                        };
+                        estudiantes.Add(estudiante);
                     }
                     
                     // Verificar y agregar profesor si el correo no existe
