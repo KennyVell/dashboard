@@ -46,7 +46,7 @@ namespace dashboard.Services
                         };
                         estudiantes.Add(estudiante);
                     }
-                    
+
                     // Verificar y agregar profesor si el correo no existe
                     string correoProfesor = sheet.Cells[row, 11].Value.ToString()!;
                     if (!profesores.Any(p => p.Correo == correoProfesor))
@@ -62,18 +62,22 @@ namespace dashboard.Services
                     }
 
                     // Agregar universidad
-                    var universidad = new Universidad
+                    string nombreUniversidad = sheet.Cells[row, 15].Value.ToString()!;
+                    if (!universidades.Any(u => u.Nombre == nombreUniversidad))
                     {
-                        Nombre = sheet.Cells[row, 15].Value.ToString(),
-                        Decano = sheet.Cells[row, 13].Value.ToString()
-                    };
-                    universidades.Add(universidad);
+                        var universidad = new Universidad
+                        {
+                            Nombre = nombreUniversidad,
+                            Decano = sheet.Cells[row, 13].Value.ToString()
+                        };
+                        universidades.Add(universidad);
+                    }
 
                     // Agregar carrera
                     var carrera = new Carrera
                     {
                         Nombre = sheet.Cells[row, 14].Value.ToString(),
-                        UniversidadId = universidades.Last().Id,
+                        UniversidadId = universidades.First(u => u.Nombre == nombreUniversidad).Id,
                     };
                     carreras.Add(carrera);
 
@@ -84,22 +88,23 @@ namespace dashboard.Services
                         Semestre = sheet.Cells[row, 7].Value.ToString(),
                         Año = int.Parse(sheet.Cells[row, 8].Value.ToString()!),
                         CarreraId = carreras.Last().Id,
-                        ProfesorId = profesores.Last().Id
+                        ProfesorId = profesores.First(p => p.Correo == correoProfesor).Id
                     };
                     materias.Add(materia);
 
-                    // Agregar inscripcion
+                    // Agregar inscripción
                     var inscripcion = new Inscripcion
                     {
                         Id = id,
                         Estado = sheet.Cells[row, 16].Value.ToString(),
-                        EstudianteId = estudiantes.Last().Id,
+                        EstudianteId = estudiantes.First(e => e.Correo == correoEstudiante).Id,
                         MateriaId = materias.Last().Id
                     };
                     inscripciones.Add(inscripcion);
                 }
             }
 
+            // Inserta todas las entidades
             await InsertDataAsync(estudiantes, profesores, universidades, carreras, materias, inscripciones);
         }
 
@@ -114,5 +119,6 @@ namespace dashboard.Services
 
             await _context.SaveChangesAsync();
         }
+
     }
 }
