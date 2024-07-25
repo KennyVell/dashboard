@@ -76,7 +76,7 @@ namespace dashboard.Services
                     var carrera = new Carrera
                     {
                         Nombre = sheet.Cells[row, 14].Value.ToString(),
-                        UniversidadId = universidades[row].Id,
+                        UniversidadId = universidades.Last().Id,
                     };
                     carreras.Add(carrera);
 
@@ -86,8 +86,8 @@ namespace dashboard.Services
                         Nombre = sheet.Cells[row, 6].Value.ToString(),
                         Semestre = sheet.Cells[row, 7].Value.ToString(),
                         Año = int.Parse(sheet.Cells[row, 8].Value.ToString()!),
-                        CarreraId = carreras[row].Id,
-                        ProfesorId = profesores[row].Id
+                        CarreraId = carreras.Last().Id,
+                        ProfesorId = profesores.Last().Id
                     };
                     materias.Add(materia);
 
@@ -96,8 +96,8 @@ namespace dashboard.Services
                     {
                         Id = id,
                         Estado = sheet.Cells[row, 16].Value.ToString(),
-                        EstudianteId = estudiantes[row].Id,
-                        MateriaId = materias[row].Id
+                        EstudianteId = estudiantes.Last().Id,
+                        MateriaId = materias.Last().Id
                     };
                     inscripciones.Add(inscripcion);
                 }
