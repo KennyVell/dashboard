@@ -62,22 +62,18 @@ namespace dashboard.Services
                     }
 
                     // Agregar universidad
-                    string nombreUniversidad = sheet.Cells[row, 15].Value.ToString()!;
-                    if (!universidades.Any(u => u.Nombre == nombreUniversidad))
+                    var universidad = new Universidad
                     {
-                        var universidad = new Universidad
-                        {
-                            Nombre = nombreUniversidad,
-                            Decano = sheet.Cells[row, 13].Value.ToString()
-                        };
-                        universidades.Add(universidad);
-                    }
+                        Nombre = sheet.Cells[row, 15].Value.ToString()!,
+                        Decano = sheet.Cells[row, 13].Value.ToString()
+                    };
+                    universidades.Add(universidad);
 
                     // Agregar carrera
                     var carrera = new Carrera
                     {
                         Nombre = sheet.Cells[row, 14].Value.ToString(),
-                        UniversidadId = universidades.First(u => u.Nombre == nombreUniversidad).Id,
+                        UniversidadId = universidades.First(u => u.Nombre == universidad.Nombre).Id,
                     };
                     carreras.Add(carrera);
 
@@ -105,19 +101,19 @@ namespace dashboard.Services
             }
 
             // Inserta todas las entidades
-            await InsertDataAsync(estudiantes, profesores, universidades, carreras, materias, inscripciones);
+            InsertDataAsync(estudiantes, profesores, universidades, carreras, materias, inscripciones);
         }
 
-        public async Task InsertDataAsync(List<Estudiante> estudiantes, List<Profesor> profesores, List<Universidad> universidades, List<Carrera> carreras, List<Materia> materias, List<Inscripcion> inscripciones)
+        public void InsertDataAsync(List<Estudiante> estudiantes, List<Profesor> profesores, List<Universidad> universidades, List<Carrera> carreras, List<Materia> materias, List<Inscripcion> inscripciones)
         {
-            await _context.Estudiantes.AddRangeAsync(estudiantes);
-            await _context.Profesores.AddRangeAsync(profesores);
-            await _context.Universidades.AddRangeAsync(universidades);
-            await _context.Carreras.AddRangeAsync(carreras);
-            await _context.Materias.AddRangeAsync(materias);
-            await _context.Inscripciones.AddRangeAsync(inscripciones);
+             _context.Estudiantes.AddRangeAsync(estudiantes);
+             _context.Profesores.AddRangeAsync(profesores);
+             _context.Universidades.AddRangeAsync(universidades);
+             _context.Carreras.AddRangeAsync(carreras);
+             _context.Materias.AddRangeAsync(materias);
+             _context.Inscripciones.AddRangeAsync(inscripciones);
 
-            await _context.SaveChangesAsync();
+             _context.SaveChangesAsync();
         }
 
     }
