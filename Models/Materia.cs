@@ -8,13 +8,13 @@ namespace dashboard.Models
         public string? Nombre { get; set; }
         public string? Semestre { get; set; }
         public int Año { get; set; }
-        public int CateriaId { get; set; }
+        public int CarreraId { get; set; }
         public int ProfesorId { get; set; }
 
         public Carrera? Carrera { get; set; }
         public Profesor? Profesor { get; set; }
 
         [JsonIgnore]
-        public List<Inscripcion> Inscripciones { get; set; } = new List<Inscripcion>();
+        public List<Inscripcion>? Inscripciones { get; set; }
     }
 }

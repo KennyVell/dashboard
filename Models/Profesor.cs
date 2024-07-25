@@ -11,6 +11,6 @@ namespace dashboard.Models
         public string? Telefono { get; set; }
 
         [JsonIgnore]
-        public List<Materia> Materias { get; set; } = new List<Materia>();
+        public List<Materia>? Materias { get; set; }
     }
 }

@@ -2,6 +2,7 @@ using OfficeOpenXml;
 using dashboard.Models;
 using dashboard.Interfaces;
 using dashboard.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace dashboard.Services
 {
@@ -14,7 +15,7 @@ namespace dashboard.Services
             _context = context;
         }
 
-        public void ProcessFile(string filePath)
+        public async Task ProcessFileAsync(string filePath)
         {
             var estudiantes = new List<Estudiante>();
             var profesores = new List<Profesor>();
@@ -30,24 +31,40 @@ namespace dashboard.Services
 
                 for (int row = 2; row <= rowCount; row++)
                 {
-                    var estudiante = new Estudiante
-                    {
-                        Nombre = sheet.Cells[row, 2].Value.ToString(),
-                        Apellido = sheet.Cells[row, 3].Value.ToString(),
-                        Correo = sheet.Cells[row, 4].Value.ToString(),
-                        Telefono = sheet.Cells[row, 5].Value.ToString()
-                    };
-                    estudiantes.Add(estudiante);
+                    int id = int.Parse(sheet.Cells[row, 1].Value.ToString()!);
 
-                    var profesor = new Profesor
+                    if (row < estudiantes.Count)
                     {
-                        Nombre = sheet.Cells[row, 9].Value.ToString(),
-                        Apellido = sheet.Cells[row, 10].Value.ToString(),
-                        Correo = sheet.Cells[row, 11].Value.ToString(),
-                        Telefono = sheet.Cells[row, 12].Value.ToString()
-                    };
-                    profesores.Add(profesor);
+                        // Verificar y agregar estudiante si el correo no existe
+                        string correoEstudiante = sheet.Cells[row, 4].Value.ToString()!;
+                        if (!estudiantes.Any(e => e.Correo == correoEstudiante))
+                        {
+                            var estudiante = new Estudiante
+                            {
+                                Nombre = sheet.Cells[row, 2].Value.ToString(),
+                                Apellido = sheet.Cells[row, 3].Value.ToString(),
+                                Correo = correoEstudiante,
+                                Telefono = sheet.Cells[row, 5].Value.ToString()
+                            };
+                            estudiantes.Add(estudiante);
+                        }
+                    }
+                    
+                    // Verificar y agregar profesor si el correo no existe
+                    string correoProfesor = sheet.Cells[row, 11].Value.ToString()!;
+                    if (!profesores.Any(p => p.Correo == correoProfesor))
+                    {
+                        var profesor = new Profesor
+                        {
+                            Nombre = sheet.Cells[row, 9].Value.ToString(),
+                            Apellido = sheet.Cells[row, 10].Value.ToString(),
+                            Correo = correoProfesor,
+                            Telefono = sheet.Cells[row, 12].Value.ToString()
+                        };
+                        profesores.Add(profesor);
+                    }
 
+                    // Agregar universidad
                     var universidad = new Universidad
                     {
                         Nombre = sheet.Cells[row, 15].Value.ToString(),
@@ -55,46 +72,50 @@ namespace dashboard.Services
                     };
                     universidades.Add(universidad);
 
+                    // Agregar carrera
                     var carrera = new Carrera
                     {
                         Nombre = sheet.Cells[row, 14].Value.ToString(),
-                        UniversidadId = int.Parse(sheet.Cells[row, 1].Value.ToString()!)
+                        UniversidadId = universidades[row].Id,
                     };
                     carreras.Add(carrera);
 
+                    // Agregar materia
                     var materia = new Materia
                     {
                         Nombre = sheet.Cells[row, 6].Value.ToString(),
                         Semestre = sheet.Cells[row, 7].Value.ToString(),
                         Año = int.Parse(sheet.Cells[row, 8].Value.ToString()!),
-                        CateriaId = int.Parse(sheet.Cells[row, 1].Value.ToString()!),
-                        ProfesorId = int.Parse(sheet.Cells[row, 1].Value.ToString()!)
+                        CarreraId = carreras[row].Id,
+                        ProfesorId = profesores[row].Id
                     };
                     materias.Add(materia);
 
+                    // Agregar inscripcion
                     var inscripcion = new Inscripcion
                     {
+                        Id = id,
                         Estado = sheet.Cells[row, 16].Value.ToString(),
-                        MateriaId = int.Parse(sheet.Cells[row, 1].Value.ToString()!),
-                        EstudianteId = int.Parse(sheet.Cells[row, 1].Value.ToString()!)
+                        EstudianteId = estudiantes[row].Id,
+                        MateriaId = materias[row].Id
                     };
                     inscripciones.Add(inscripcion);
                 }
             }
 
-            InsertData(estudiantes, profesores, universidades, carreras, materias, inscripciones);
+            await InsertDataAsync(estudiantes, profesores, universidades, carreras, materias, inscripciones);
         }
 
-        public void InsertData(List<Estudiante> estudiantes, List<Profesor> profesores, List<Universidad> universidades, List<Carrera> carreras, List<Materia> materias, List<Inscripcion> inscripciones)
+        public async Task InsertDataAsync(List<Estudiante> estudiantes, List<Profesor> profesores, List<Universidad> universidades, List<Carrera> carreras, List<Materia> materias, List<Inscripcion> inscripciones)
         {
-            _context.Estudiantes.AddRange(estudiantes);
-            _context.Profesores.AddRange(profesores);
-            _context.Universidades.AddRange(universidades);
-            _context.Carreras.AddRange(carreras);
-            _context.Materias.AddRange(materias);
-            _context.Inscripciones.AddRange(inscripciones);
+            await _context.Estudiantes.AddRangeAsync(estudiantes);
+            await _context.Profesores.AddRangeAsync(profesores);
+            await _context.Universidades.AddRangeAsync(universidades);
+            await _context.Carreras.AddRangeAsync(carreras);
+            await _context.Materias.AddRangeAsync(materias);
+            await _context.Inscripciones.AddRangeAsync(inscripciones);
 
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
     }
 }

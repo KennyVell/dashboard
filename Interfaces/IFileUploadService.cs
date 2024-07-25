@@ -2,6 +2,6 @@ namespace dashboard.Interfaces
 {
     public interface IFileUploadService
     {
-        void UploadFile(IFormFile file);
+        Task UploadFile(IFormFile file);
     }
 }

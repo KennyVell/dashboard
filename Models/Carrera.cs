@@ -10,6 +10,6 @@ namespace dashboard.Models
 
         public Universidad? Universidad { get; set; }
         [JsonIgnore]
-        public List<Materia> Materias { get; set; } = new List<Materia>();
+        public List<Materia>? Materias { get; set; }
     }
 }

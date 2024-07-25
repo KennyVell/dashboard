@@ -11,7 +11,7 @@ namespace dashboard.Services
             _dataProcessingService = dataProcessingService;
         }
 
-        public void UploadFile(IFormFile file)
+        public async Task UploadFile(IFormFile file)
         {
             if (file != null && file.Length > 0)
             {
@@ -23,7 +23,7 @@ namespace dashboard.Services
                     file.CopyTo(stream);
                 }
 
-                _dataProcessingService.ProcessFile(filePath);
+                await _dataProcessingService.ProcessFileAsync(filePath);
             }
         }
     }

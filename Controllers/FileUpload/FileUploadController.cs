@@ -19,11 +19,11 @@ namespace YourNamespace.Controllers
         }
 
         [HttpPost]
-        public IActionResult UploadFile(FileUploadDTO model)
+        public async Task<IActionResult> UploadFile(FileUploadDTO model)
         {
             if (model.File != null && model.File.Length > 0)
             {
-                _fileUploadService.UploadFile(model.File);
+                await _fileUploadService.UploadFile(model.File);
             }
             return RedirectToAction("Index");
         }
