@@ -14,5 +14,6 @@ public class BaseContext : DbContext
     public DbSet<Materia> Materias { get; set; }
     public DbSet<Profesor> Profesores { get; set; }
     public DbSet<Inscripcion> Inscripciones { get; set; }
-
+    public DbSet<User> Users { get; set; }
+    public DbSet<SocialLogin> SocialLogins { get; set; }
 } 

@@ -8,6 +8,9 @@ namespace dashboard.Utils
     {
         public MappingProfile()
         {
+            CreateMap<UserDTO, User>();
+            CreateMap<User, UserDTO>().ReverseMap();
+
             CreateMap<EstudianteDTO, Estudiante>();
             CreateMap<Estudiante, EstudianteDTO>().ReverseMap();
 
