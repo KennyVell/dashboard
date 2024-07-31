@@ -50,6 +50,13 @@ namespace dashboard.Services
                 .Where(u => u.Email == user.Email)
                 .FirstOrDefaultAsync();
 
+            if (userFind != null && userFind.Password == null)
+            {
+                // si el usuario inicio sesion con google y aun no tiene contraseña se le seteara
+                userFind.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
+                await _context.SaveChangesAsync();
+            }
+
             // Verifica la contraseña del usuario
             if (userFind != null && BCrypt.Net.BCrypt.Verify(user.Password, userFind.Password))
             {
